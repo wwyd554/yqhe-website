@@ -37,7 +37,7 @@
     overflow-x: hidden;
     background: #000;
     color: hsl(var(--foreground));
-    font-family: "Barlow", sans-serif;
+    font-family: ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
   }
 
   ::selection {

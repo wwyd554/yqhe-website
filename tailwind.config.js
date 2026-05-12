@@ -5,8 +5,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ["'Instrument Serif'", "serif"],
-        body: ["'Barlow'", "sans-serif"],
+        heading: ["ui-sans-serif", "system-ui", "'PingFang SC'", "'Microsoft YaHei'", "sans-serif"],
+        body: ["ui-sans-serif", "system-ui", "'PingFang SC'", "'Microsoft YaHei'", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

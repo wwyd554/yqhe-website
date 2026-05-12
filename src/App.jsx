@@ -3,9 +3,10 @@ import { motion } from "motion/react";
 import {
   ArrowUpRight,
   BarChart3,
+  Menu,
   Palette,
-  Play,
   Shield,
+  X,
   Zap,
 } from "lucide-react";
 
@@ -24,7 +25,6 @@ const navItems = [
   ["造物", "experience"],
   ["联系", "contact"],
 ];
-const expertise = ["智能体搭建", "知识库检索", "提示词设计", "产品原型", "数据反馈"];
 
 function BlurText({
   text,
@@ -118,8 +118,9 @@ function SectionHeader({ badge, title }) {
   );
 }
 
-function Navbar() {
+function Navbar({ visibility }) {
   const [activeSection, setActiveSection] = useState("home");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     let frameId = null;
@@ -162,8 +163,25 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    if (visibility <= 0.02) {
+      setMenuOpen(false);
+    }
+  }, [visibility]);
+
+  const handleNavClick = (target) => {
+    setActiveSection(target);
+    setMenuOpen(false);
+  };
+
   return (
-    <header className="fixed left-0 right-0 top-4 z-50 px-8 py-3 lg:px-16">
+    <header
+      className={cn(
+        "fixed left-0 right-0 top-4 z-50 px-6 py-3 opacity-0 transition-opacity duration-500 lg:px-16",
+        visibility > 0.04 ? "pointer-events-auto" : "pointer-events-none",
+      )}
+      style={{ opacity: visibility }}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-center">
         <nav className="hidden items-center gap-1 md:flex">
           <div className="liquid-glass flex items-center gap-1 rounded-full px-1.5 py-1">
@@ -171,7 +189,7 @@ function Navbar() {
               <a
                 key={item}
                 href={`#${target}`}
-                onClick={() => setActiveSection(target)}
+                onClick={() => handleNavClick(target)}
                 className={cn(
                   "rounded-full px-3 py-2 font-body text-sm font-medium transition",
                   activeSection === target
@@ -184,78 +202,103 @@ function Navbar() {
             ))}
           </div>
         </nav>
+
+        <div className="relative md:hidden">
+          <button
+            type="button"
+            aria-label={menuOpen ? "关闭导航" : "打开导航"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+            className="liquid-glass flex h-11 w-11 items-center justify-center rounded-full text-white transition hover:bg-white/10"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+
+          <div
+            className={cn(
+              "liquid-glass absolute left-1/2 top-14 w-36 -translate-x-1/2 rounded-lg p-2 transition duration-300",
+              menuOpen
+                ? "translate-y-0 opacity-100"
+                : "-translate-y-2 pointer-events-none opacity-0",
+            )}
+          >
+            {navItems.map(([item, target]) => (
+              <a
+                key={item}
+                href={`#${target}`}
+                onClick={() => handleNavClick(target)}
+                className={cn(
+                  "block rounded-md px-3 py-2 text-center font-body text-sm font-medium transition",
+                  activeSection === target
+                    ? "bg-white text-black"
+                    : "text-white/75 hover:bg-white/10 hover:text-white",
+                )}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </header>
   );
 }
 
-function Hero() {
+function Hero({ introProgress }) {
+  const [cardHovered, setCardHovered] = useState(false);
+  const cardOpacity = 1 - introProgress;
+  const cardOffset = introProgress * 18;
+
+  const scrollToContent = () => {
+    document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section
       id="home"
-      className="relative h-[1000px] scroll-mt-24 overflow-visible bg-black"
-      aria-labelledby="hero-heading"
+      className="relative h-screen min-h-[680px] scroll-mt-24 overflow-hidden bg-black"
+      aria-labelledby="intro-title"
     >
       <img
         src={HERO_GIF}
         alt=""
-        className="absolute left-0 top-[20%] z-0 h-auto w-full object-contain"
+        className={cn(
+          "absolute left-0 top-[20%] z-0 h-auto w-full object-contain transition-transform duration-700 ease-out",
+          cardHovered && "-translate-y-[2px]",
+        )}
       />
       <div className="absolute inset-0 z-0 bg-black/5" />
       <div className="pointer-events-none absolute bottom-0 z-0 h-[300px] w-full bg-gradient-to-b from-transparent to-black" />
-
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-6 pt-[170px] text-center md:px-10">
-        <h1
-          id="hero-heading"
-          className="mx-auto max-w-none font-body text-4xl font-medium leading-[1.08] tracking-normal text-foreground sm:text-5xl md:whitespace-nowrap md:text-5xl lg:text-6xl xl:text-7xl"
+      <div
+        className="absolute left-1/2 top-[62%] z-20 w-[calc(100%-2rem)] max-w-sm lg:w-[30vw] lg:max-w-[380px]"
+        style={{
+          opacity: cardOpacity,
+          transform: `translate(-50%, calc(-50% - ${cardOffset}px))`,
+          transition: "opacity 0.6s ease, transform 0.6s ease",
+          pointerEvents: cardOpacity > 0.08 ? "auto" : "none",
+        }}
+      >
+        <div
+          className="rounded-lg border border-white/20 bg-black/80 px-6 py-5 text-center shadow-[0_0_28px_rgba(255,255,255,0.13)] backdrop-blur-md transition duration-[600ms] ease-out hover:-translate-y-[3px] hover:bg-black/75 hover:shadow-[0_0_38px_rgba(255,255,255,0.2)]"
+          onMouseEnter={() => setCardHovered(true)}
+          onMouseLeave={() => setCardHovered(false)}
         >
-          <BlurText text="把 AI 产品推进到真实业务现场" delay={100} />
-        </h1>
-
-        <motion.p
-          initial={{ filter: "blur(10px)", opacity: 0, y: 20 }}
-          animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-          className="mx-auto mt-7 max-w-md font-body text-sm font-light leading-tight text-white md:text-base"
-        >
-          关注智能体应用、知识服务产品与业务场景落地。这里记录我的项目、能力、文章与生活。
-        </motion.p>
-
-        <motion.div
-          initial={{ filter: "blur(10px)", opacity: 0, y: 20 }}
-          animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.6, ease: "easeOut" }}
-          className="mt-8 flex items-center justify-center gap-4"
-        >
-          <Button asChild>
-            <a href="#work">
-              查看项目
-              <ArrowUpRight className="h-4 w-4" />
-            </a>
-          </Button>
-          <a
-            href="#experience"
-            className="inline-flex items-center gap-2 rounded-full px-4 py-3 font-body text-sm font-medium text-white/85 transition hover:text-white"
+          <h1
+            id="intro-title"
+            className="font-body text-[30px] font-light leading-none text-white/90"
           >
-            <Play className="h-4 w-4 fill-white" />
-            了解经历
-          </a>
-        </motion.div>
-
-        <div className="mt-auto pb-8 pt-16">
-          <div className="mx-auto mb-8 w-fit rounded-full px-4 py-2 font-body text-xs text-white/70 liquid-glass">
-            当前关注的工具与方法
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-12 md:gap-16">
-            {expertise.map((partner) => (
-              <span
-                key={partner}
-                className="font-heading text-2xl italic text-white md:text-3xl"
-              >
-                {partner}
-              </span>
-            ))}
-          </div>
+            武禹德
+          </h1>
+          <p className="mt-3 font-body text-sm font-light text-white/55">
+            AI产品的网页记录
+          </p>
+          <button
+            type="button"
+            onClick={scrollToContent}
+            className="mt-5 rounded-full border border-white/40 px-6 py-2 font-body text-sm font-light text-white/80 transition duration-300 hover:border-white/70 hover:bg-white/10 hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.2)]"
+          >
+            启程
+          </button>
         </div>
       </div>
     </section>
@@ -591,11 +634,45 @@ function CtaFooter() {
 }
 
 export default function App() {
+  const [introProgress, setIntroProgress] = useState(0);
+
+  useEffect(() => {
+    let frameId = null;
+
+    const updateProgress = () => {
+      const fadeDistance = window.innerHeight * 0.1;
+      const progress = fadeDistance
+        ? Math.min(Math.max(window.scrollY / fadeDistance, 0), 1)
+        : 0;
+
+      setIntroProgress(progress);
+    };
+
+    const scheduleUpdate = () => {
+      if (frameId) return;
+
+      frameId = window.requestAnimationFrame(() => {
+        frameId = null;
+        updateProgress();
+      });
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (frameId) window.cancelAnimationFrame(frameId);
+    };
+  }, []);
+
   return (
     <div className="bg-black">
       <div className="relative z-10">
-        <Navbar />
-        <Hero />
+        <Navbar visibility={introProgress} />
+        <Hero introProgress={introProgress} />
         <div className="bg-black">
           <StartSection />
           <FeaturesGrid />
