@@ -506,23 +506,23 @@ function Stats() {
           {creationProjects.map((project) => (
             <article
               key={project.title}
-              className="liquid-glass-strong group relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/18 bg-black/55 p-2 transition-transform duration-300 ease-out hover:-translate-y-2"
+              className="liquid-glass-strong group relative overflow-hidden rounded-2xl border border-white/18 bg-black/55 p-2 transition-transform duration-300 ease-out hover:-translate-y-2"
             >
-              <div className="relative h-full overflow-hidden rounded-xl bg-black/45">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-black/45">
                 <img
                   src={project.image}
                   alt={`${project.title} 产品截图`}
                   className="h-full w-full object-contain"
                   draggable="false"
                 />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/78 via-black/30 to-transparent px-4 pb-4 pt-14 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <p className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
-                    {project.tag}
-                  </p>
-                  <h3 className="mt-1 font-body text-lg font-medium text-white">
-                    {project.title}
-                  </h3>
-                </div>
+              </div>
+              <div className="px-3 pb-3 pt-4">
+                <p className="font-body text-[11px] font-medium uppercase tracking-[0.22em] text-white/45">
+                  {project.tag}
+                </p>
+                <h3 className="mt-1 font-body text-lg font-medium text-white">
+                  {project.title}
+                </h3>
               </div>
             </article>
           ))}
