@@ -562,6 +562,23 @@ function CtaFooter() {
             <p className="mt-9 font-body text-sm font-light tracking-[0.12em] text-white/70 md:text-base">
               1074910496@qq.com
             </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              {[
+                ["人人都是产品经理", "https://www.woshipm.com/ai/6443348.html"],
+                ["小红书", "https://www.xiaohongshu.com/user/profile/660a0856000000000b00ee55"],
+                ["抖音", "https://www.douyin.com/user/self"],
+              ].map(([name, href]) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-white/20 px-4 py-2 font-body text-sm text-white/70 transition hover:border-white/50 hover:text-white"
+                >
+                  {name}
+                </a>
+              ))}
+            </div>
           </div>
         </article>
 
