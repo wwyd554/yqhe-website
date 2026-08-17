@@ -9,20 +9,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const HERO_GIF = "/images/hero.gif";
-const START_VIDEO = "/videos/start.mp4";
-const CREATION_VIDEO = "/videos/creation.mp4";
-const CONTACT_VIDEO = "/videos/contact.mp4";
+const BASE_URL = import.meta.env.BASE_URL;
+const HERO_GIF = `${BASE_URL}images/hero.gif`;
+const START_VIDEO = `${BASE_URL}videos/start.mp4`;
+const CREATION_VIDEO = `${BASE_URL}videos/creation.mp4`;
+const CONTACT_VIDEO = `${BASE_URL}videos/contact.mp4`;
 
 const creationProjects = [
   {
     title: "Sakura Radio",
-    image: "/images/project-sakura-radio.png",
+    image: `${BASE_URL}images/project-sakura-radio.png`,
     tag: "AI 音乐陪伴",
   },
   {
     title: "AI 编程任务卡片生成器",
-    image: "/images/project-task-card-generator.png",
+    image: `${BASE_URL}images/project-task-card-generator.png`,
     tag: "AI 编程工具",
   },
 ];
